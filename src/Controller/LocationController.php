@@ -21,10 +21,10 @@ class LocationController extends AbstractController
     }
 
     #[Route('/phone/{latitude}/{longitude}', name: 'app_phone', methods: ['GET'])]
-    public function getPhone(int $latitude, int $longitude): JsonResponse
+    public function getPhone($latitude, $longitude): JsonResponse
     {
-        error_log($latitude);
-        error_log($longitude);
+        $latitude = intval($latitude);
+        $longitude = intval($longitude);
         if (isset(self::MOCK_PHONE_MYSQL_TABLE[$latitude][$longitude])) {
             $data = self::MOCK_PHONE_MYSQL_TABLE[$latitude][$longitude];
         } else {
