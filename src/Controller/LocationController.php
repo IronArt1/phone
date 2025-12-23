@@ -10,8 +10,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class LocationController extends AbstractController
 {
     const MOCK_PHONE_MYSQL_TABLE = [
-        'St Petersburg' => '430-56-71',
-        'Moscow' => '123-16-92',
+        30 => [59 => '430-56-71'], // St.Petersburg
+        37 => [55 => '123-16-92'], // Moscow
     ];
 
     #[Route('/location', name: 'app_location', methods: ['GET'])]
@@ -20,9 +20,17 @@ class LocationController extends AbstractController
         return $this->render('location/index.html.twig', []);
     }
 
-    #[Route('/phone/{name}', name: 'app_phone', methods: ['GET'])]
-    public function getPhone($name): JsonResponse
+    #[Route('/phone/{latitude}/{longitude}', name: 'app_phone', methods: ['GET'])]
+    public function getPhone(int $latitude, int $longitude): JsonResponse
     {
-        return $this->json(self::MOCK_PHONE_MYSQL_TABLE[$name]);
+        error_log($latitude);
+        error_log($longitude);
+        if (isset(self::MOCK_PHONE_MYSQL_TABLE[$latitude][$longitude])) {
+            $data = self::MOCK_PHONE_MYSQL_TABLE[$latitude][$longitude];
+        } else {
+            $data = 'there is no such city';
+        }
+
+        return $this->json($data);
     }
 }

@@ -201,8 +201,9 @@
             // and user would be willing to allow using his/her location.
             // or use third-party IP geolocation API, although the precision is not quite accurate...
             const localeData = getData('https://geolocation-db.com/json/', function(locationResponse) {
-                if (locationResponse.city) {
-                    getData('http://127.0.0.1:8077/phone/' + locationResponse.city, function(phoneResponse) {
+                if (locationResponse.longitude && locationResponse.latitude) {
+                    getData('http://127.0.0.1:8077/phone/' + locationResponse.longitude + '/' + locationResponse.latitude,
+                        function(phoneResponse) {
                         headerElement.headerPhoneInfo.setUpPhone(phoneResponse);
                         footerElement.footerPhoneInfo.setUpPhone(phoneResponse);
                     });
