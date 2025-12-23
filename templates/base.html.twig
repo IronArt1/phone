@@ -115,7 +115,11 @@
                 }
 
                 setUpPhone(phone) {
-                    this.headerPhoneInfo.querySelector('#headerPhonePlaceHolder').innerHTML = phone;
+                    this.getHeaderPhonePlaceHolder().innerHTML = phone;
+                }
+
+                getHeaderPhonePlaceHolder() {
+                    return this.headerPhoneInfo.querySelector('#headerPhonePlaceHolder');
                 }
             }
 
@@ -137,8 +141,9 @@
             }
 
             class FooterPhone extends Component {
-                constructor(tag) {
+                constructor(tag, header) {
                     super(tag);
+                    this.header = header;
                     this.render();
                 }
 
@@ -149,6 +154,14 @@
                         [new ElementAttribute('id', 'footer-phone')]
                     );
                     this.footerPhoneInfo = new FooterPhoneInfo('footer-phone', 'DIGITS')
+                    const mo = new MutationObserver(m => this.footerPhoneInfo.setUpPhone(m[0].target.innerHTML));
+                    mo.observe(this.header.headerPhoneInfo.getHeaderPhonePlaceHolder(), { childList: true });
+                    // this.header.headerPhoneInfo.getHeaderPhonePlaceHolder().addEventListener(
+                    //     'change',
+                    //     (event) => {
+                    //         this.footerPhoneInfo.setUpPhone(event.target.innerHTML);
+                    //     }
+                    // );
                 }
             }
 
@@ -176,7 +189,7 @@
 
             const createHeaderElement = (tag) => {
                 headerElement = new HeaderPhone(tag);
-                footerElement = new FooterPhone(tag);
+                footerElement = new FooterPhone(tag, headerElement);
 
             };
             createHeaderElement('app');
@@ -205,7 +218,6 @@
                     getData('http://127.0.0.1:8077/phone/' + locationResponse.longitude + '/' + locationResponse.latitude,
                         function(phoneResponse) {
                         headerElement.headerPhoneInfo.setUpPhone(phoneResponse);
-                        footerElement.footerPhoneInfo.setUpPhone(phoneResponse);
                     });
                 }
             });
