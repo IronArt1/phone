@@ -18,6 +18,6 @@ RUN composer install --prefer-dist --no-dev --no-scripts --optimize-autoloader
 #RUN chmod 775 -R ../app
 #RUN addgroup -S nginx && adduser -S nginx -G nginx
 RUN chown -R www-data:www-data config src
-RUN chmod -R 0777  var/cache
+#RUN chmod -R 0777  var/cache
 RUN chmod -R 0775  config src templates
 #CMD symfony server:start
