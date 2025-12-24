@@ -1,5 +1,6 @@
 <?php
 
+$bufferColumnOutput = '';
 $stack = $randomStack = $summaryStack = [];
 $summaryStack[0] = $summaryStack[1] = [];
 $getPostfix = function($key) { return $key !== 1 ? $key !== 2 ? $key !== 3 ? 'th' : 'rd' : 'nd' : 'st';};
@@ -16,12 +17,17 @@ for ($i=1;$i<=5;$i++) {
             }
         } while ($loop);
         $summaryStack[0][$i] += $stack[$i][$j] = $nextRandom;
-        $summaryStack[1][$j] = ($summaryStack[1][$j] ?? 0)   + $stack[$i][$j];
+        $summaryStack[1][$j] = ($summaryStack[1][$j] ?? 0) + $stack[$i][$j];
+        if ($i === 5) {
+            $bufferColumnOutput .= sprintf('a summary of the %d%s column is - %d' , $j, $getPostfix($j), $summaryStack[1][$j]) . PHP_EOL;
+        }
         echo " {$stack[$i][$j]} ";
     }
     echo " - a summary of $i{$getPostfix($i)} row is -> {$summaryStack[0][$i]}" . PHP_EOL;
 }
 
-foreach ($summaryStack[1] as $key => $rowSummary) {
-    echo sprintf('a summary of the %d%s column is - %d' , $key, $getPostfix($key), $rowSummary) . PHP_EOL;
-}
+echo $bufferColumnOutput;
+
+unset($summaryStack, $randomStack, $stack);
+gc_collect_cycles();
+
