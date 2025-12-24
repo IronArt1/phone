@@ -27,7 +27,3 @@ for ($i=1;$i<=5;$i++) {
 }
 
 echo $bufferColumnOutput;
-
-unset($summaryStack, $randomStack, $stack);
-gc_collect_cycles();
-
